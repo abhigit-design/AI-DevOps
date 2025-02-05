@@ -29,7 +29,7 @@ jobs:
         run: python scripts/ai_code_review.py
 
       - name: Upload reports as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1
         with:
           name: ai-reports
           path: ./reports
@@ -55,10 +55,10 @@ jobs:
         run: python scripts/ai_test_generator.py
 
       - name: Upload tests directory as an artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1
         with:
           name: generated-tests
-          path: tests/
+          path: ./tests
 
   run_tests:
     needs: ai_test_generation
