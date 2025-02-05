@@ -98,8 +98,5 @@ jobs:
       - name: List files in tests directory
         run: ls -R tests/
 
-      - name: Copy the tests to the current directory (if necessary)
-        run: cp -r tests/* ./tests/
-
       - name: Run AI-Generated Tests
         run: pytest tests/
