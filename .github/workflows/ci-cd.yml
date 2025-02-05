@@ -54,6 +54,11 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: python scripts/ai_test_generator.py
 
+      - name: Check if tests directory exists
+        run: |
+              ls -R tests/
+              echo "Uploading tests directory"
+      
       - name: Upload tests directory as an artifact
         uses: actions/upload-artifact@v4
         with:
