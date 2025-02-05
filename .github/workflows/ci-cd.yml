@@ -1,4 +1,4 @@
-name: AI-Powered CI/CD Pipeline
+name: AI-Powered CI/CD pipeline
 
 on:
   push:
