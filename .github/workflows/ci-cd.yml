@@ -28,6 +28,12 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: python scripts/ai_code_review.py
 
+      - name: Upload reports as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ai-reports
+          path: ./reports
+
   ai_test_generation:
     needs: ai_code_review
     runs-on: ubuntu-latest
