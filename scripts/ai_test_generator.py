@@ -6,7 +6,10 @@ client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def generate_tests():
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+    
+    # Add repo_root to the Python path so pytest can find app.py
+    sys.path.append(repo_root)
+    
     # Construct the full path to app.py
     app_file_path = os.path.join(repo_root, "app.py")
 
