@@ -88,11 +88,11 @@ jobs:
           # Check if the file is named correctly and exists
           find . -name "generated-tests.zip"
       
-      - name: Extract tests directory
-        run: unzip generated-tests.zip -d tests/
-
       - name: List files in tests directory
         run: ls -R tests/
+
+      - name: Copy the tests to the current directory (if necessary)
+        run: cp -r tests/* ./tests/
 
       - name: Run AI-Generated Tests
         run: pytest tests/
