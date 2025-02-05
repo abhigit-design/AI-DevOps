@@ -29,7 +29,7 @@ def review_code():
         messages=[{"role": "system", "content": "You are a Python code reviewer."},
                   {"role": "user", "content": prompt}]
     )
-
+    review_feedback = response.choices[0].message.content
     # Ensure the reports directory exists
     reports_dir = os.path.join(repo_root, 'reports')
     os.makedirs(reports_dir, exist_ok=True)  # This will create the directory if it doesn't exist
