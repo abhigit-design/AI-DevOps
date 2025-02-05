@@ -18,6 +18,9 @@ jobs:
           python-version: '3.9'
 
       - name: Install Dependencies
+        run: pip install --upgrade openai
+        
+      - name: Install Dependencies
         run: pip install openai pytest
 
       - name: Run AI Code Review
