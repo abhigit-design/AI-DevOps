@@ -25,7 +25,7 @@ def review_code():
     """
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4o",
         messages=[{"role": "system", "content": "You are a Python code reviewer."},
                   {"role": "user", "content": prompt}]
     )
