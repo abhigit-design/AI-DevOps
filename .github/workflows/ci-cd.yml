@@ -80,6 +80,14 @@ jobs:
         with:
           name: generated-tests
 
+      
+      - name: Check if artifact exists
+        run: |
+          echo "Checking downloaded files"
+          ls -alh
+          # Check if the file is named correctly and exists
+          find . -name "generated-tests.zip"
+      
       - name: Extract tests directory
         run: unzip generated-tests.zip -d tests/
 
