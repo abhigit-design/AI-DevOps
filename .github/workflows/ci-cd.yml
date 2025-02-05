@@ -75,5 +75,16 @@ jobs:
       - name: Install Dependencies
         run: pip install pytest
 
+      - name: Download tests artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-tests
+
+      - name: Extract tests directory
+        run: unzip generated-tests.zip -d tests/
+
+      - name: List files in tests directory
+        run: ls -R tests/
+
       - name: Run AI-Generated Tests
         run: pytest tests/
