@@ -15,15 +15,12 @@ def generate_tests():
         code_snippet = f.read()
 
     prompt = f"Generate unit tests for this Python code using pytest:\n{code_snippet}"
-    
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "system", "content": prompt}]
     )
 
-    # Correct way to access the content in the response
-    test_code = response.choices[0].message["content"]
-    
+    test_code = response.choices[0].message.content  # Correct way to access the content
     tests_dir = os.path.join(repo_root, 'tests')
     os.makedirs(tests_dir, exist_ok=True)  # This will create the directory if it doesn't exist
 
