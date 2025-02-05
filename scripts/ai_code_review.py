@@ -30,10 +30,12 @@ def review_code():
                   {"role": "user", "content": prompt}]
     )
 
-    review_feedback = response.choices[0].message.content
+    # Ensure the reports directory exists
+    reports_dir = os.path.join(repo_root, 'reports')
+    os.makedirs(reports_dir, exist_ok=True)  # This will create the directory if it doesn't exist
 
-    # Save the review feedback to a file
-    with open("../reports/code_review.txt", "w") as f:
+    # Write feedback to file
+    with open(os.path.join(reports_dir, "code_review.txt"), "w") as f:
         f.write(review_feedback)
 
     print("✅ AI Code Review Completed! Report saved to reports/code_review.txt")
