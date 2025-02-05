@@ -1,29 +1,8 @@
 import openai
 import os
-import re
 
 # Load API Key
 client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
-def validate_test_code(test_code: str) -> bool:
-    """
-    Validate the structure of the generated test code.
-    - Checks for the presence of pytest imports.
-    - Ensures functions are defined with test function names.
-    """
-    # Check if pytest is imported
-    if 'import pytest' not in test_code:
-        print("Error: 'pytest' is not imported in the generated test code.")
-        return False
-
-    # Check if there's at least one test function in the generated code
-    test_functions = re.findall(r'def test_\w+', test_code)
-    if not test_functions:
-        print("Error: No test functions found in the generated code.")
-        return False
-    
-    print(f"Found {len(test_functions)} test functions.")
-    return True
 
 def generate_tests():
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -35,28 +14,28 @@ def generate_tests():
     with open(app_file_path, "r") as f:
         code_snippet = f.read()
 
-    prompt = f"Generate unit tests for this Python code using pytest without any extra description:\n{code_snippet}"
+    # Update the prompt to generate only pytest test code without extra text
+    prompt = f"Generate unit tests for this Python code using pytest. Do not include any additional explanation or comments, only the test code:\n{code_snippet}"
+
+    # Request the test code from OpenAI API
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "system", "content": prompt}]
     )
 
-    test_code = response.choices[0].message.content  # Correct way to access the content
+    # Extract the generated test code
+    test_code = response.choices[0].message.content.strip()  # Clean any extra whitespace or unwanted text
 
-    # Validate the generated test code
-    if not validate_test_code(test_code):
-        print("Generated test code is invalid. Exiting.")
-        return
+    # Clean up any markdown formatting or non-Python syntax (like ```python)
+    test_code = test_code.replace("```python", "").replace("```", "").strip()
 
     tests_dir = os.path.join(repo_root, 'tests')
-    os.makedirs(tests_dir, exist_ok=True)  # This will create the directory if it doesn't exist
+    os.makedirs(tests_dir, exist_ok=True)  # Create the directory if it doesn't exist
 
-    test_file_path = os.path.join(tests_dir, "test_app.py")
-    
-    # Write the generated test code to test_app.py
-    with open(test_file_path, "w") as f:
+    # Save the test code to a file
+    with open(os.path.join(tests_dir, "test_app.py"), "w") as f:
         f.write(test_code)
-    
+
     print("AI-Generated Unit Tests:\n", test_code)
 
 if __name__ == "__main__":
