@@ -89,6 +89,7 @@ jobs:
       - name: Check if artifact exists
         run: |
           echo "Checking downloaded files"
+          cd tests/
           ls -alh
           # Check if the file is named correctly and exists
           find . -name "generated-tests.zip"
