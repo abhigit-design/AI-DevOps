@@ -86,7 +86,6 @@ jobs:
           name: generated-tests
           path: tests/
 
-      
       - name: Check if artifact exists
         run: |
           echo "Checking downloaded files"
@@ -97,6 +96,9 @@ jobs:
       
       - name: List files in tests directory
         run: ls -R tests/
+
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
 
       - name: Run AI-Generated Tests
         run: pytest tests/
