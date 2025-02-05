@@ -35,7 +35,7 @@ def generate_tests():
     with open(app_file_path, "r") as f:
         code_snippet = f.read()
 
-    prompt = f"Generate unit tests for this Python code using pytest:\n{code_snippet}"
+    prompt = f"Generate unit tests for this Python code using pytest without any extra description:\n{code_snippet}"
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "system", "content": prompt}]
