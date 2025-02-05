@@ -15,7 +15,7 @@ def generate_tests():
         code_snippet = f.read()
 
     # Update the prompt to generate only pytest test code without extra text
-    prompt = f"Generate unit tests for this Python code using pytest. Do not include any additional explanation or comments, only the test code:\n{code_snippet}"
+    prompt = f"Generate unit tests for this Python code using pytest. Do not include any additional explanation or comments, only the test code. Ensure the test imports the functions correctly from 'app.py':\n{code_snippet}"
 
     # Request the test code from OpenAI API
     response = client.chat.completions.create(
@@ -28,6 +28,9 @@ def generate_tests():
 
     # Clean up any markdown formatting or non-Python syntax (like ```python)
     test_code = test_code.replace("```python", "").replace("```", "").strip()
+
+    # Replace 'your_module' with 'app'
+    test_code = test_code.replace("your_module", "app")
 
     tests_dir = os.path.join(repo_root, 'tests')
     os.makedirs(tests_dir, exist_ok=True)  # Create the directory if it doesn't exist
