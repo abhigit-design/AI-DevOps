@@ -1,23 +1,32 @@
 import openai
 import os
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Load API Key
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def generate_tests():
-    with open("app.py", "r") as file:
-        code = file.read()
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    # Construct the full path to app.py
+    app_file_path = os.path.join(repo_root, "app.py")
+
+    # Open the file
+    with open(app_file_path, "r") as f:
+        code_snippet = f.read()
 
     prompt = f"Generate unit tests for this Python code using pytest:\n{code}"
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
         messages=[{"role": "system", "content": prompt}]
     )
 
     test_code = response["choices"][0]["message"]["content"]
-    
-    with open("tests/test_app.py", "w") as test_file:
-        test_file.write(test_code)
+    tests_dir = os.path.join(repo_root, 'tests')
+    os.makedirs(tests_dir, exist_ok=True)  # This will create the directory if it doesn't exist
 
+    with open(os.path.join(tests_dir, "test_app.py"), "w") as f:
+    f.write(test_code)
+    
     print("AI-Generated Unit Tests:\n", test_code)
 
 if __name__ == "__main__":
