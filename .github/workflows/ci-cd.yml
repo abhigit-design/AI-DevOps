@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: generated-tests
-          path: ./tests
+          path: tests/
 
   run_tests:
     needs: ai_test_generation
