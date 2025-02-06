@@ -6,7 +6,28 @@ on:
       - main
 
 jobs:
+  security_and_linting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Security & Linting Tools
+        run: pip install bandit flake8
+
+      - name: Run Security Scan (Bandit)
+        run: bandit -r .
+
+      - name: Run Linting (Flake8)
+        run: flake8 --max-line-length=120
+
   ai_code_review:
+    needs: security_and_linting  # Runs only after security & linting
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -18,10 +39,7 @@ jobs:
           python-version: '3.9'
 
       - name: Install Dependencies
-        run: pip install --upgrade openai
-        
-      - name: Install Dependencies
-        run: pip install openai pytest
+        run: pip install --upgrade openai pytest
 
       - name: Run AI Code Review
         env:
@@ -54,11 +72,6 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: python scripts/ai_test_generator.py
 
-      - name: Check if tests directory exists
-        run: |
-              ls -R tests/
-              echo "Uploading tests directory"
-      
       - name: Upload tests directory as an artifact
         uses: actions/upload-artifact@v4
         with:
@@ -85,20 +98,6 @@ jobs:
         with:
           name: generated-tests
           path: tests/
-
-      - name: Check if artifact exists
-        run: |
-          echo "Checking downloaded files"
-          cd tests/
-          ls -alh
-          # Check if the file is named correctly and exists
-          find . -name "generated-tests.zip"
-      
-      - name: List files in tests directory
-        run: ls -R tests/
-
-      - name: Set PYTHONPATH
-        run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
 
       - name: Run AI-Generated Tests
         run: pytest tests/
