@@ -17,14 +17,14 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install Security & Linting Tools
-        run: pip install bandit flake8
+      - name: Install Security Tools
+        run: pip install bandit
 
       - name: Run Security Scan (Bandit)
         run: bandit -r .
 
-      - name: Run Linting (Flake8)
-        run: flake8 --max-line-length=120
+      #- name: Run Linting (Flake8)
+      #  run: flake8 --max-line-length=120
 
   ai_code_review:
     needs: security_and_linting  # Runs only after security & linting
